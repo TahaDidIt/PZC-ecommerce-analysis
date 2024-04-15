@@ -22,6 +22,9 @@ dataset = pd.read_csv(csvPath, encoding = "unicode escape")
 
 print(dataset.describe)
 
+#Top items dataset
+csv2Path = "C:/Taha/projects/Data Science Fundamentals with Python and SQL/PZ Cussons presentation working directory/topitems.csv"
+topItemsData = pd.read_csv(csv2Path)
 
 #Creating a new dataset where orders are grouped together (invoiceNo not repeating)
 transactionsData = dataset.groupby("InvoiceNo").agg({
@@ -76,6 +79,36 @@ def pieChart1():
     plt.show()
 
 
+### Multi-country boxplot 
+def boxPlot2():
+    # Calculate transaction count for each country
+    countryCount = transactionsData['Country'].value_counts()
+
+    # Select the top 5 countries
+    countryCountTop5 = countryCount.head(5).index
+
+    # Filter the dataset to include only transactions from the top 5 countries
+    top5CountryData = transactionsData[transactionsData['Country'].isin(countryCountTop5)]
+    
+    plt.figure(figsize = (6,3))
+    ax = sns.boxplot(x = "Quantity", y = "Country", data = top5CountryData,
+                     showfliers = False)
+    ax.grid(axis = "x", linestyle = "--")
+    ax.set_title("Items per Transaction")
+    plt.show()
+    
+
+# Bar chart (most sold items)
+def barChart1():
+    sns.set(font_scale = 1.5)
+    plt.figure(figsize = (7, 4))
+    sns.barplot(x = "TotalQuantity", y = "Description", data = topItemsData, 
+                ci = None)
+    plt.title("Most Purchased Items")
+    plt.xlabel("Units Sold")
+    plt.ylabel("Item")
+    plt.show()
+
 
 """
 ###Co-occurences
@@ -112,7 +145,8 @@ print(co_occurrences.head(10))
 ##### MENU
 
 ### Visualisations index
-plotFunctions = {1: boxPlot1}
+plotFunctions = {1: boxPlot1, 2: pieChart1, 3: boxPlot2,
+                 4: barChart1}
 
 
 ### Menu
